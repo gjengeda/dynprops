@@ -1,7 +1,7 @@
 package no.gjengeda;
 
+import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,13 +17,13 @@ public class DynamicPropertyTest {
     private static final Logger LOGGER = Logger.getLogger(DynamicPropertyTest.class);
 
     @Autowired
-    private PropertiesConfiguration config;
+    private AbstractConfiguration config;
     
     @Test
     public void testDynamicPropertyLoading() throws ConfigurationException {
-        LOGGER.debug(config.getFileName());
         for (int i = 0; i < 2; i++) {
             LOGGER.debug(config.getString("myprop"));
+            LOGGER.debug(config.getString("log4j.test"));
         }
     }
 }
