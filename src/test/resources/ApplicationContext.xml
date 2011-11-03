@@ -5,20 +5,32 @@
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
-       default-autowire="byName">
+       default-autowire="byType">
 
     <bean name="reloadedFileConfiguration" class="no.gjengeda.ReloadedPropertyConfiguration" init-method="load">
         <property name="fileName" value="my.properties"/>
     </bean>
 
-    <bean name="nonExistentFileConfiguration" class="no.gjengeda.ReloadedPropertyConfiguration" init-method="init">
+    <bean name="nonExistentFileConfiguration" class="no.gjengeda.ReloadedPropertyConfiguration" init-method="load">
         <property name="fileName" value="nonexistent.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
     </bean>
-
-    <bean name="fileChangedStrategy" class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy" />
 
     <bean name="config" class="org.apache.commons.configuration.CompositeConfiguration">
         <constructor-arg><list><ref bean="reloadedFileConfiguration"/><ref bean="nonExistentFileConfiguration"/></list></constructor-arg>
     </bean>
+
+    <bean name="configfactorybean" class="org.springmodules.commons.configuration.CommonsConfigurationFactoryBean">
+         <constructor-arg ref="config"/>
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="properties" ref="configfactorybean"/>
+    </bean>
+
+    <bean class="no.gjengeda.SimpleBean">
+        <property name="propertyvalue" value="${myprop}"/>
+    </bean>
+
 
 </beans>

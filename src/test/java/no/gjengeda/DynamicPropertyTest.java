@@ -1,5 +1,8 @@
 package no.gjengeda;
 
+import static org.hamcrest.core.IsEqual.*;
+import static org.junit.Assert.*;
+
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
@@ -18,12 +21,15 @@ public class DynamicPropertyTest {
 
     @Autowired
     private AbstractConfiguration config;
-    
+
+    @Autowired
+    private SimpleBean mySimpleBean;
+
     @Test
     public void testDynamicPropertyLoading() throws ConfigurationException {
         for (int i = 0; i < 2; i++) {
-            LOGGER.debug(config.getString("myprop"));
-            LOGGER.debug(config.getString("log4j.test"));
+            assertThat(mySimpleBean.propertyvalue, equalTo(config.getString("myprop")));
         }
     }
+    
 }
